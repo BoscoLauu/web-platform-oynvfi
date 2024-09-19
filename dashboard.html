@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主頁面</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="countdown">
+        <p>距離考試還有 <span id="daysRemaining"></span> 天</p>
+    </div>
+
+    <!-- 顯示輸入的內容 -->
+    <div id="outputContainer"></div>
+
+    <!-- 新增的輸入欄和輸出按鈕 -->
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="請輸入內容">
+        <button id="outputButton" onclick="outputAction()">輸出</button>
+    </div>
+
+    <div class="logout-button">
+        <button onclick="logout()">登出</button>
+    </div>
+
+    <!-- 新增的圓形加號按鈕 -->
+    <div class="add-button">
+        <button onclick="addAction()">+</button>
+    </div>
+
+    <script>
+        // 設定考試日期為 2025 年 4 月 1 日
+        const examDate = new Date('2025-04-01'); // 更新為新的考試日期
+        const currentDate = new Date();
+
+        // 計算剩餘天數
+        const timeDifference = examDate - currentDate;
+        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // 轉換為天數
+
+        // 顯示剩餘天數
+        document.getElementById('daysRemaining').textContent = daysRemaining > 0 ? daysRemaining : 0;
+
+        // 加載本地儲存的數據
+        document.addEventListener('DOMContentLoaded', loadSavedData);
+
+        function loadSavedData() {
+            const savedData = JSON.parse(localStorage.getItem('inputData')) || [];
+            const outputContainer = document.getElementById('outputContainer');
+            outputContainer.innerHTML = ''; // 清空之前的內容
+
+            savedData.forEach(data => {
+                const outputElement = document.createElement('p');
+                outputElement.textContent = data;
+                outputContainer.appendChild(outputElement);
+            });
+        }
+
+        function logout() {
+            // 執行登出操作，例如重定向回登入頁面
+            window.location.href = 'index.html';
+        }
+
+        function addAction() {
+            // 在這裡可以添加按鈕的功能
+            alert("添加新項目"); // 這是示例，可以根據需要更改
+        }
+
+        function outputAction() {
+            const userInput = document.getElementById('userInput').value;
+
+            // 獲取本地儲存的數據
+            const savedData = JSON.parse(localStorage.getItem('inputData')) || [];
+            savedData.push(userInput); // 將新輸入添加到數組中
+
+            // 更新本地儲存
+            localStorage.setItem('inputData', JSON.stringify(savedData));
+
+            // 更新顯示
+            const outputContainer = document.getElementById('outputContainer');
+            const outputElement = document.createElement('p');
+            outputElement.textContent = userInput;
+            outputContainer.appendChild(outputElement);
+
+            // 清空輸入欄
+            document.getElementById('userInput').value = '';
+        }
+    </script>
+</body>
+</html>
