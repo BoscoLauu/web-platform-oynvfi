@@ -11,13 +11,21 @@
         <p>距離考試還有 <span id="daysRemaining"></span> 天</p>
     </div>
 
-    <!-- 顯示輸入的內容 -->
-    <div id="outputContainer"></div>
-
-    <!-- 新增的輸入欄和輸出按鈕 -->
+    <!-- 新增的輸入欄 -->
     <div class="input-container">
         <input type="text" id="userInput" placeholder="請輸入內容">
-        <button id="outputButton" onclick="outputAction()">輸出</button>
+    </div>
+
+    <!-- 新增的截止時間選擇器 -->
+    <div class="deadline-container">
+        <input type="date" id="deadlineDate" />
+        <input type="time" id="deadlineTime" />
+        <div class="button-container">
+            <button id="startButton" onclick="startTimer()">開始計時</button>
+            <button id="stopButton" onclick="stopTimer()" disabled>停止計時</button>
+        </div>
+        <button id="clearButton" onclick="clearFields()">刪除</button> <!-- 新增刪除按鈕 -->
+        <p id="timerDisplay"></p>
     </div>
 
     <div class="logout-button">
@@ -41,20 +49,7 @@
         // 顯示剩餘天數
         document.getElementById('daysRemaining').textContent = daysRemaining > 0 ? daysRemaining : 0;
 
-        // 加載本地儲存的數據
-        document.addEventListener('DOMContentLoaded', loadSavedData);
-
-        function loadSavedData() {
-            const savedData = JSON.parse(localStorage.getItem('inputData')) || [];
-            const outputContainer = document.getElementById('outputContainer');
-            outputContainer.innerHTML = ''; // 清空之前的內容
-
-            savedData.forEach(data => {
-                const outputElement = document.createElement('p');
-                outputElement.textContent = data;
-                outputContainer.appendChild(outputElement);
-            });
-        }
+        let timerInterval;
 
         function logout() {
             // 執行登出操作，例如重定向回登入頁面
@@ -66,24 +61,56 @@
             alert("添加新項目"); // 這是示例，可以根據需要更改
         }
 
-        function outputAction() {
-            const userInput = document.getElementById('userInput').value;
+        function startTimer() {
+            const dateInput = document.getElementById('deadlineDate').value;
+            const timeInput = document.getElementById('deadlineTime').value;
 
-            // 獲取本地儲存的數據
-            const savedData = JSON.parse(localStorage.getItem('inputData')) || [];
-            savedData.push(userInput); // 將新輸入添加到數組中
+            if (!dateInput || !timeInput) {
+                alert("請選擇截止日期和時間");
+                return;
+            }
 
-            // 更新本地儲存
-            localStorage.setItem('inputData', JSON.stringify(savedData));
+            const deadline = new Date(`${dateInput}T${timeInput}`);
 
-            // 更新顯示
-            const outputContainer = document.getElementById('outputContainer');
-            const outputElement = document.createElement('p');
-            outputElement.textContent = userInput;
-            outputContainer.appendChild(outputElement);
+            const timerDisplay = document.getElementById('timerDisplay');
+            document.getElementById('startButton').disabled = true; // 禁用開始按鈕
+            document.getElementById('stopButton').disabled = false; // 啟用停止按鈕
 
-            // 清空輸入欄
-            document.getElementById('userInput').value = '';
+            timerInterval = setInterval(() => {
+                const now = new Date();
+                const timeRemaining = deadline - now;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.textContent = "時間到！";
+                    document.getElementById('startButton').disabled = false; // 啟用開始按鈕
+                    document.getElementById('stopButton').disabled = true; // 禁用停止按鈕
+                } else {
+                    const seconds = Math.floor((timeRemaining / 1000) % 60);
+                    const minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
+                    const hours = Math.floor((timeRemaining / 1000 / 3600) % 24);
+                    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+
+                    timerDisplay.textContent = `${days}天 ${hours}小時 ${minutes}分鐘 ${seconds}秒`;
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('startButton').disabled = false; // 啟用開始按鈕
+            document.getElementById('stopButton').disabled = true; // 禁用停止按鈕
+            document.getElementById('timerDisplay').textContent = ""; // 清空計時顯示
+        }
+
+        function clearFields() {
+            document.getElementById('userInput').value = ""; // 清空輸入欄
+            document.getElementById('deadlineDate').value = ""; // 清空日期選擇器
+            document.getElementById('deadlineTime').value = ""; // 清空時間選擇器
+            document.getElementById('timerDisplay').textContent = ""; // 清空計時顯示
+            stopTimer(); // 停止計時器
+            document.getElementById('startButton').disabled = false; // 啟用開始按鈕
+            document.getElementById('stopButton').disabled = true; // 禁用停止按鈕
         }
     </script>
 </body>

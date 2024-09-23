@@ -2,6 +2,11 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 使內容居中 */
+  justify-content: center; /* 垂直居中 */
+  height: 100vh; /* 使 body 高度為 100% */
 }
 
 .countdown {
@@ -14,45 +19,64 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 投影效果 */
 }
 
-/* 顯示輸入的內容 */
-#outputContainer {
-  display: flex; /* 使用 Flexbox 來排列 */
-  flex-direction: column; /* 垂直排列 */
-  align-items: center; /* 水平居中 */
-  margin-bottom: 10px; /* 下邊距 */
-}
-
-/* 新增的輸入欄和按鈕樣式 */
+/* 新增的輸入欄樣式 */
 .input-container {
-  display: flex; /* 使用 Flexbox 來排列 */
+  display: flex; /* 使用 Flexbox 來居中 */
   justify-content: center; /* 水平居中 */
   align-items: center; /* 垂直居中 */
-  margin-top: 20px; /* 上邊距 */
 }
 
 .input-container input {
-  width: 200px; /* 輸入欄寬度 */
+  width: 300px; /* 輸入欄寬度 */
   padding: 10px; /* 內邊距 */
   border: 1px solid #ccc; /* 邊框樣式 */
   border-radius: 5px; /* 圓角 */
   font-size: 16px; /* 字體大小 */
-  margin-right: 10px; /* 右邊距離 */
 }
 
-.input-container button {
+/* 新增的截止時間選擇器樣式 */
+.deadline-container {
+  display: flex; /* 使用 Flexbox 來排版 */
+  flex-direction: column; /* 垂直排列 */
+  align-items: center; /* 水平居中 */
+  margin-top: 20px; /* 上方間距 */
+}
+
+.deadline-container input {
+  margin: 5px; /* 輕微的間距 */
+  padding: 10px; /* 內邊距 */
+  border: 1px solid #ccc; /* 邊框樣式 */
+  border-radius: 5px; /* 圓角 */
+}
+
+.button-container {
+  display: flex; /* 使用 Flexbox 來水平排列按鈕 */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+}
+
+.deadline-container button {
   padding: 10px 15px; /* 按鈕內邊距 */
-  background-color: #007bff; /* 按鈕背景顏色 */
+  background-color: #5cb85c; /* 開始計時按鈕顏色 */
   color: white; /* 字體顏色 */
   border: none; /* 無邊框 */
   border-radius: 5px; /* 圓角 */
   cursor: pointer; /* 鼠標懸停效果 */
+  margin: 5px; /* 按鈕間距 */
 }
 
-.input-container button:hover {
-  background-color: #0056b3; /* 滑鼠懸停顏色 */
+.deadline-container button#stopButton {
+  background-color: #d9534f; /* 停止計時按鈕顏色 */
 }
 
-/* 登出按鈕樣式 */
+.deadline-container button#clearButton {
+  background-color: #f0ad4e; /* 刪除按鈕顏色為橙色 */
+}
+
+.deadline-container button:hover {
+  background-color: #4cae4c; /* 滑鼠懸停顏色 */
+}
+
 .logout-button {
   position: absolute; /* 絕對定位 */
   top: 20px; /* 距離頁面頂部 20px */
