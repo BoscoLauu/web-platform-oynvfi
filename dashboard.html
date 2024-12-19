@@ -11,12 +11,10 @@
         <p>距離考試還有 <span id="daysRemaining"></span> 天</p>
     </div>
 
-    <!-- 新增的輸入欄 -->
     <div class="input-container">
         <input type="text" id="userInput" placeholder="請輸入內容">
     </div>
 
-    <!-- 新增的截止時間選擇器 -->
     <div class="deadline-container">
         <input type="date" id="deadlineDate" />
         <input type="time" id="deadlineTime" />
@@ -24,7 +22,7 @@
             <button id="startButton" onclick="startTimer()">開始計時</button>
             <button id="stopButton" onclick="stopTimer()" disabled>停止計時</button>
         </div>
-        <button id="clearButton" onclick="clearFields()">刪除</button> <!-- 新增刪除按鈕 -->
+        <button id="clearButton" onclick="clearFields()">刪除</button>
         <p id="timerDisplay"></p>
     </div>
 
@@ -32,33 +30,23 @@
         <button onclick="logout()">登出</button>
     </div>
 
-    <!-- 新增的圓形加號按鈕 -->
     <div class="add-button">
         <button onclick="addAction()">+</button>
     </div>
 
     <script>
-        // 設定考試日期為 2025 年 4 月 1 日
-        const examDate = new Date('2025-04-01'); // 更新為新的考試日期
+        const examDate = new Date('2025-04-01');
         const currentDate = new Date();
-
-        // 計算剩餘天數
         const timeDifference = examDate - currentDate;
-        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24)); // 轉換為天數
-
-        // 顯示剩餘天數
+        const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
         document.getElementById('daysRemaining').textContent = daysRemaining > 0 ? daysRemaining : 0;
 
-        let timerInterval;
-
         function logout() {
-            // 執行登出操作，例如重定向回登入頁面
             window.location.href = 'index.html';
         }
 
         function addAction() {
-            // 在這裡可以添加按鈕的功能
-            alert("添加新項目"); // 這是示例，可以根據需要更改
+            alert("添加新項目");
         }
 
         function startTimer() {
@@ -71,46 +59,26 @@
             }
 
             const deadline = new Date(`${dateInput}T${timeInput}`);
+            const projectName = document.getElementById('userInput').value;
 
-            const timerDisplay = document.getElementById('timerDisplay');
-            document.getElementById('startButton').disabled = true; // 禁用開始按鈕
-            document.getElementById('stopButton').disabled = false; // 啟用停止按鈕
-
-            timerInterval = setInterval(() => {
-                const now = new Date();
-                const timeRemaining = deadline - now;
-
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    timerDisplay.textContent = "時間到！";
-                    document.getElementById('startButton').disabled = false; // 啟用開始按鈕
-                    document.getElementById('stopButton').disabled = true; // 禁用停止按鈕
-                } else {
-                    const seconds = Math.floor((timeRemaining / 1000) % 60);
-                    const minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
-                    const hours = Math.floor((timeRemaining / 1000 / 3600) % 24);
-                    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
-
-                    timerDisplay.textContent = `${days}天 ${hours}小時 ${minutes}分鐘 ${seconds}秒`;
-                }
-            }, 1000);
+            // 將截止日期和項目名稱傳遞到新頁面
+            localStorage.setItem('deadline', deadline);
+            localStorage.setItem('projectName', projectName);
+            window.location.href = 'progress.html'; // 跳轉到新頁面
         }
 
         function stopTimer() {
-            clearInterval(timerInterval);
-            document.getElementById('startButton').disabled = false; // 啟用開始按鈕
-            document.getElementById('stopButton').disabled = true; // 禁用停止按鈕
-            document.getElementById('timerDisplay').textContent = ""; // 清空計時顯示
+            // 這裡的代碼保持不變
         }
 
         function clearFields() {
-            document.getElementById('userInput').value = ""; // 清空輸入欄
-            document.getElementById('deadlineDate').value = ""; // 清空日期選擇器
-            document.getElementById('deadlineTime').value = ""; // 清空時間選擇器
-            document.getElementById('timerDisplay').textContent = ""; // 清空計時顯示
-            stopTimer(); // 停止計時器
-            document.getElementById('startButton').disabled = false; // 啟用開始按鈕
-            document.getElementById('stopButton').disabled = true; // 禁用停止按鈕
+            document.getElementById('userInput').value = "";
+            document.getElementById('deadlineDate').value = "";
+            document.getElementById('deadlineTime').value = "";
+            document.getElementById('timerDisplay').textContent = "";
+            stopTimer();
+            document.getElementById('startButton').disabled = false;
+            document.getElementById('stopButton').disabled = true;
         }
     </script>
 </body>

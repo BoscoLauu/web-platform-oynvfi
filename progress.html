@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進度頁面</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 返回按鈕 -->
+    <div class="back-button">
+        <button onclick="goBack()">返回</button>
+    </div>
+
+    <h1 id="projectTitle"></h1>
+    
+    <div class="progress-container">
+        <p>進度率: <span id="progressRate">0%</span></p>
+        <div class="progress-bar">
+            <div id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="countdown-container">
+        <p>剩餘時間: <span id="countdownDisplay"></span></p>
+    </div>
+
+    <div class="logout-button">
+        <button onclick="logout()">登出</button>
+    </div>
+
+    <script>
+        // 獲取截止日期和項目名稱
+        const deadline = new Date(localStorage.getItem('deadline'));
+        const projectName = localStorage.getItem('projectName');
+        document.getElementById('projectTitle').textContent = projectName;
+
+        function calculateProgress() {
+            const now = new Date();
+            const totalDuration = deadline - new Date(); // 從現在到截止日期的總持續時間
+            const startDate = new Date(localStorage.getItem('startDate'));
+            const elapsedDuration = now - startDate; // 從開始日期到現在的持續時間
+
+            // 計算進度
+            if (totalDuration > 0) {
+                const progress = Math.min(100, Math.max(0, (elapsedDuration / totalDuration) * 100));
+                document.getElementById('progressRate').textContent = `${Math.round(progress)}%`;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+            } else {
+                document.getElementById('progressRate').textContent = "100%";
+                document.getElementById('progressFill').style.width = "100%";
+            }
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeRemaining = deadline - now;
+
+            if (timeRemaining > 0) {
+                const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+                document.getElementById('countdownDisplay').textContent = 
+                    `${days}天 ${hours}小時 ${minutes}分鐘 ${seconds}秒`;
+            } else {
+                document.getElementById('countdownDisplay').textContent = "時間到！";
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'dashboard.html'; // 返回主頁面
+        }
+
+        function logout() {
+            window.location.href = 'index.html';
+        }
+
+        // 設置開始日期為當前時間
+        localStorage.setItem('startDate', new Date());
+
+        // 每隔一秒更新進度和倒數
+        setInterval(() => {
+            calculateProgress();
+            updateCountdown();
+        }, 1000);
+    </script>
+    <style>
+        .back-button {
+            position: absolute; /* 絕對定位 */
+            top: 20px; /* 距離頁面頂部 20px */
+            left: 20px; /* 距離頁面左側 20px */
+        }
+
+        .back-button button {
+            padding: 10px 15px; /* 按鈕內邊距 */
+            background-color: #f0ad4e; /* 橙色 */
+            color: white; /* 字體顏色 */
+            border: none; /* 無邊框 */
+            border-radius: 5px; /* 圓角 */
+            cursor: pointer; /* 鼠標懸停效果 */
+        }
+
+        .back-button button:hover {
+            background-color: #ec971f; /* 滑鼠懸停顏色 */
+        }
+
+        .progress-container {
+            margin-top: 60px; /* 增加上方間距以避免與返回按鈕重疊 */
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            height: 30px;
+        }
+
+        #progressFill {
+            height: 100%;
+            background-color: #5cb85c;
+            width: 0;
+            transition: width 0.5s;
+        }
+
+        .countdown-container {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</body>
+</html>

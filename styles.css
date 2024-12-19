@@ -119,3 +119,40 @@ body {
 .add-button button:hover {
   background-color: #4cae4c; /* 滑鼠懸停顏色 */
 }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.progress-container {
+  text-align: center;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.logout-button button {
+  padding: 10px 15px;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button button:hover {
+  background-color: #c9302c;
+}
